@@ -1,0 +1,126 @@
+{
+  "name": "prmkit",
+  "displayName": "PrmKit",
+  "description": "AI Prompt Toolkit for Developers — manage, queue, and reuse prompts across AI coding assistants",
+  "version": "0.1.0",
+  "publisher": "pengyanhua",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pengyanhua/PrmKit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pengyanhua/PrmKit/issues"
+  },
+  "homepage": "https://github.com/pengyanhua/PrmKit#readme",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "prmkit",
+          "title": "PrmKit",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "prmkit": [
+        {
+          "type": "webview",
+          "id": "prmkit.queueView",
+          "name": "Prompt Queue"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "prmkit.quickCapture",
+        "title": "PrmKit: Quick Capture"
+      },
+      {
+        "command": "prmkit.sendToQueue",
+        "title": "Send to PrmKit"
+      },
+      {
+        "command": "prmkit.exportQueue",
+        "title": "PrmKit: Export Queue"
+      },
+      {
+        "command": "prmkit.importQueue",
+        "title": "PrmKit: Import Queue"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "prmkit.quickCapture",
+        "key": "ctrl+shift+q",
+        "mac": "cmd+shift+q"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "prmkit.sendToQueue",
+          "when": "editorHasSelection",
+          "group": "prmkit"
+        }
+      ],
+      "terminal/context": [
+        {
+          "command": "prmkit.sendToQueue",
+          "group": "prmkit"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "PrmKit",
+      "properties": {
+        "prmkit.defaultTarget": {
+          "type": "string",
+          "default": "clipboard",
+          "enum": [
+            "clipboard",
+            "terminal",
+            "copilot-chat",
+            "cursor"
+          ],
+          "enumDescriptions": [
+            "Copy to clipboard (universal)",
+            "Send to VS Code terminal",
+            "Send to Copilot Chat",
+            "Send to Cursor AI"
+          ],
+          "description": "Default dispatch target for executing prompts"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "node esbuild.js --production",
+    "watch": "node esbuild.js --watch",
+    "build:webview": "node esbuild.js --webview --production",
+    "watch:webview": "node esbuild.js --webview --watch"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "uuid": "^9.0.0"
+  }
+}
