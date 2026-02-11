@@ -17,8 +17,25 @@
     "vscode": "^1.85.0"
   },
   "categories": [
+    "Machine Learning",
     "Other"
   ],
+  "keywords": [
+    "ai",
+    "prompt",
+    "claude",
+    "copilot",
+    "cursor",
+    "prompt-engineering",
+    "ai-assistant",
+    "productivity",
+    "queue",
+    "template"
+  ],
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
