@@ -6,5 +6,6 @@ node_modules/**
 docs/**
 tsconfig*.json
 esbuild.js
+scripts/**
 .gitignore
 *.map
