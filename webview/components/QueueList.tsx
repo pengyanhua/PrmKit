@@ -36,6 +36,19 @@ export function QueueList({ items }: Props) {
     setDragId(null);
   }, [dragId, items]);
 
+  const handleMove = useCallback((id: string, direction: 'up' | 'down') => {
+    const ids = items.map(i => i.id);
+    const index = ids.indexOf(id);
+    if (index === -1) return;
+
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= ids.length) return;
+
+    ids.splice(index, 1);
+    ids.splice(targetIndex, 0, id);
+    vscode.postMessage({ type: 'reorderItems', ids });
+  }, [items]);
+
   if (items.length === 0) {
     return <div className="empty">No prompts in queue. Add one above.</div>;
   }
@@ -47,9 +60,12 @@ export function QueueList({ items }: Props) {
           key={item.id}
           item={item}
           index={index}
+          total={items.length}
           isDragging={dragId === item.id}
           onDragStart={handleDragStart}
           onDrop={handleDrop}
+          onMoveUp={(id) => handleMove(id, 'up')}
+          onMoveDown={(id) => handleMove(id, 'down')}
         />
       ))}
     </div>

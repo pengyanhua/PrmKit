@@ -11,7 +11,8 @@ export function activate(context: vscode.ExtensionContext) {
     return;
   }
 
-  const storageService = new StorageService(workspaceFolder.uri.fsPath);
+  const globalDir = context.globalStorageUri.fsPath;
+  const storageService = new StorageService(globalDir, workspaceFolder.uri.fsPath);
   const queueService = new QueueService(storageService, workspaceFolder.name);
   const templateService = new TemplateService();
   const dispatchService = new DispatchService();
@@ -103,7 +104,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.workspace.onDidChangeWorkspaceFolders(() => {
       const newFolder = vscode.workspace.workspaceFolders?.[0];
       if (newFolder) {
-        storageService.setProjectRoot(newFolder.uri.fsPath);
+        storageService.setProjectPath(newFolder.uri.fsPath);
         queueService.setProject(newFolder.name);
         provider.refresh();
       }

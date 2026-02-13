@@ -15,9 +15,17 @@ export interface QueueItem {
   order: number;
 }
 
+export interface TargetInfo {
+  id: string;
+  label: string;
+}
+
+export type SortMode = 'order' | 'frequency';
+
 export type ExtToWebviewMessage =
   | { type: 'updateQueue'; items: QueueItem[] }
-  | { type: 'updateProject'; project: string };
+  | { type: 'updateProject'; project: string }
+  | { type: 'updateTargets'; targets: TargetInfo[]; activeId: string };
 
 export type WebviewToExtMessage =
   | { type: 'addItem'; content: string; source?: QueueItemSource }
@@ -29,6 +37,7 @@ export type WebviewToExtMessage =
   | { type: 'executeItem'; id: string }
   | { type: 'executeAll' }
   | { type: 'clearCompleted' }
+  | { type: 'setTarget'; targetId: string }
   | { type: 'ready' };
 
 declare function acquireVsCodeApi(): {

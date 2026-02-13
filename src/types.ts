@@ -22,10 +22,16 @@ export interface QueueData {
   queue: QueueItem[];
 }
 
+export interface TargetInfo {
+  id: string;
+  label: string;
+}
+
 /** Messages from extension host to webview */
 export type ExtToWebviewMessage =
   | { type: 'updateQueue'; items: QueueItem[] }
-  | { type: 'updateProject'; project: string };
+  | { type: 'updateProject'; project: string }
+  | { type: 'updateTargets'; targets: TargetInfo[]; activeId: string };
 
 /** Messages from webview to extension host */
 export type WebviewToExtMessage =
@@ -38,4 +44,5 @@ export type WebviewToExtMessage =
   | { type: 'executeItem'; id: string }
   | { type: 'executeAll' }
   | { type: 'clearCompleted' }
+  | { type: 'setTarget'; targetId: string }
   | { type: 'ready' };

@@ -47,6 +47,11 @@ export class QueueViewProvider implements vscode.WebviewViewProvider {
         type: 'updateProject',
         project: this.queueService.getProject(),
       });
+      this._view.webview.postMessage({
+        type: 'updateTargets',
+        targets: this.dispatchService.getAllTargets(),
+        activeId: this.dispatchService.getActiveTargetId(),
+      });
     }
   }
 
@@ -83,6 +88,9 @@ export class QueueViewProvider implements vscode.WebviewViewProvider {
         break;
       case 'clearCompleted':
         this.queueService.clearCompleted();
+        break;
+      case 'setTarget':
+        this.dispatchService.setActiveTarget(msg.targetId);
         break;
     }
   }

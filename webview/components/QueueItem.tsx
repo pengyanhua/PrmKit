@@ -5,12 +5,15 @@ import { vscode } from '../types';
 interface Props {
   item: QueueItem;
   index: number;
+  total: number;
   isDragging: boolean;
   onDragStart: (id: string) => void;
   onDrop: (id: string) => void;
+  onMoveUp: (id: string) => void;
+  onMoveDown: (id: string) => void;
 }
 
-export function QueueItemRow({ item, index, isDragging, onDragStart, onDrop }: Props) {
+export function QueueItemRow({ item, index, total, isDragging, onDragStart, onDrop, onMoveUp, onMoveDown }: Props) {
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(item.content);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -95,6 +98,22 @@ export function QueueItemRow({ item, index, isDragging, onDragStart, onDrop }: P
 
       {item.status === 'pending' && (
         <div className="queue-item-actions">
+          <button
+            className="btn-icon"
+            title="Move up"
+            onClick={() => onMoveUp(item.id)}
+            disabled={index === 0}
+          >
+            ▲
+          </button>
+          <button
+            className="btn-icon"
+            title="Move down"
+            onClick={() => onMoveDown(item.id)}
+            disabled={index === total - 1}
+          >
+            ▼
+          </button>
           <button
             className="btn-icon"
             title="Execute"

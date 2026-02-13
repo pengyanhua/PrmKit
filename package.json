@@ -2,7 +2,7 @@
   "name": "prmkit",
   "displayName": "PrmKit",
   "description": "AI Prompt Toolkit for Developers — manage, queue, and reuse prompts across AI coding assistants",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "pengyanhua",
   "license": "MIT",
   "repository": {

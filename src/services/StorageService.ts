@@ -1,22 +1,27 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as os from 'os';
+import * as crypto from 'crypto';
 import type { QueueData } from '../types';
 
-const PRMKIT_DIR = '.prmkit';
 const QUEUE_FILE = 'queue.json';
 
+/**
+ * Data stored at: {globalStoragePath}/{projectHash}/queue.json
+ * Each project identified by hash of its absolute path — no files in project dir.
+ */
 export class StorageService {
-  private projectRoot: string;
+  private globalDir: string;
+  private projectPath: string;
   private watcher?: fs.FSWatcher;
   private _onChange?: () => void;
 
-  constructor(projectRoot: string) {
-    this.projectRoot = projectRoot;
+  constructor(globalDir: string, projectPath: string) {
+    this.globalDir = globalDir;
+    this.projectPath = projectPath;
   }
 
-  setProjectRoot(root: string) {
-    this.projectRoot = root;
+  setProjectPath(projectPath: string) {
+    this.projectPath = projectPath;
     this._stopWatch();
     this._startWatch();
   }
@@ -26,8 +31,12 @@ export class StorageService {
     this._startWatch();
   }
 
+  private get projectHash(): string {
+    return crypto.createHash('md5').update(this.projectPath).digest('hex').slice(0, 12);
+  }
+
   private get dirPath(): string {
-    return path.join(this.projectRoot, PRMKIT_DIR);
+    return path.join(this.globalDir, this.projectHash);
   }
 
   private get filePath(): string {

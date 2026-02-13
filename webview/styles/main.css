@@ -134,6 +134,67 @@ body {
   color: var(--vscode-errorForeground);
 }
 
+/* Toolbar */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.toolbar-label {
+  font-size: 11px;
+  color: var(--vscode-descriptionForeground);
+}
+
+.btn-chip {
+  padding: 1px 6px;
+  border: 1px solid var(--vscode-input-border);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--vscode-descriptionForeground);
+  font-size: 11px;
+  cursor: pointer;
+  font-family: var(--vscode-font-family);
+}
+
+.btn-chip:hover {
+  background: var(--vscode-toolbar-hoverBackground);
+}
+
+.btn-chip.active {
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  border-color: var(--vscode-button-background);
+}
+
+.target-select {
+  padding: 1px 4px;
+  border: 1px solid var(--vscode-input-border);
+  border-radius: 2px;
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  font-size: 11px;
+  font-family: var(--vscode-font-family);
+  cursor: pointer;
+}
+
+.target-select:focus {
+  outline: 1px solid var(--vscode-focusBorder);
+}
+
+.btn-icon:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 /* Queue List */
 .queue-list {
   display: flex;
