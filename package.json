@@ -108,13 +108,15 @@
             "clipboard",
             "terminal",
             "copilot-chat",
-            "cursor"
+            "cursor",
+            "claude-code"
           ],
           "enumDescriptions": [
             "Copy to clipboard (universal)",
             "Send to VS Code terminal",
             "Send to Copilot Chat",
-            "Send to Cursor AI"
+            "Send to Cursor AI",
+            "Send to Claude Code"
           ],
           "description": "Default dispatch target for executing prompts"
         }
