@@ -7,27 +7,25 @@ export class ClaudeTarget implements DispatchTarget {
 
   async send(text: string): Promise<void> {
     await vscode.env.clipboard.writeText(text);
-    // Try to focus Claude Code's chat view
+    // Open sidebar and focus input
     try {
-      await vscode.commands.executeCommand('claude.focusInput');
+      await vscode.commands.executeCommand('claude-vscode.sidebar.open');
+      await new Promise(resolve => setTimeout(resolve, 500));
+      await vscode.commands.executeCommand('claude-vscode.focus');
     } catch {
-      // Fallback: try alternative command names
+      // Sidebar may already be open, just focus
       try {
-        await vscode.commands.executeCommand('claude.openChat');
+        await vscode.commands.executeCommand('claude-vscode.focus');
       } catch {
-        vscode.window.showInformationMessage(
-          'Claude Code chat opened — paste the prompt from clipboard'
-        );
-        return;
+        // ignore
       }
     }
-    await vscode.commands.executeCommand('editor.action.clipboardPasteAction');
+    vscode.window.showInformationMessage(
+      'Prompt copied — press Ctrl+V to paste into Claude Code'
+    );
   }
 
   isAvailable(): boolean {
-    return (
-      vscode.extensions.getExtension('saoudrizwan.claude-dev') !== undefined ||
-      vscode.extensions.getExtension('anthropics.claude-code') !== undefined
-    );
+    return vscode.extensions.getExtension('anthropic.claude-code') !== undefined;
   }
 }
