@@ -96,47 +96,49 @@ export function QueueItemRow({ item, index, total, isDragging, onDragStart, onDr
         {item.isTemplate && <span className="queue-item-badge">tpl</span>}
       </div>
 
-      {item.status === 'pending' && (
-        <div className="queue-item-actions">
-          <button
-            className="btn-icon"
-            title="Move up"
-            onClick={() => onMoveUp(item.id)}
-            disabled={index === 0}
-          >
-            ▲
-          </button>
-          <button
-            className="btn-icon"
-            title="Move down"
-            onClick={() => onMoveDown(item.id)}
-            disabled={index === total - 1}
-          >
-            ▼
-          </button>
-          <button
-            className="btn-icon"
-            title="Execute"
-            onClick={() => vscode.postMessage({ type: 'executeItem', id: item.id })}
-          >
-            ▶
-          </button>
-          <button
-            className="btn-icon"
-            title="Skip"
-            onClick={() => vscode.postMessage({ type: 'updateStatus', id: item.id, status: 'skipped' })}
-          >
-            ⏭
-          </button>
-          <button
-            className="btn-icon btn-danger"
-            title="Delete"
-            onClick={() => vscode.postMessage({ type: 'deleteItem', id: item.id })}
-          >
-            ✕
-          </button>
-        </div>
-      )}
+      <div className="queue-item-actions">
+        {item.status === 'pending' && (
+          <>
+            <button
+              className="btn-icon"
+              title="Move up"
+              onClick={() => onMoveUp(item.id)}
+              disabled={index === 0}
+            >
+              ▲
+            </button>
+            <button
+              className="btn-icon"
+              title="Move down"
+              onClick={() => onMoveDown(item.id)}
+              disabled={index === total - 1}
+            >
+              ▼
+            </button>
+            <button
+              className="btn-icon"
+              title="Execute"
+              onClick={() => vscode.postMessage({ type: 'executeItem', id: item.id })}
+            >
+              ▶
+            </button>
+            <button
+              className="btn-icon"
+              title="Skip"
+              onClick={() => vscode.postMessage({ type: 'updateStatus', id: item.id, status: 'skipped' })}
+            >
+              ⏭
+            </button>
+          </>
+        )}
+        <button
+          className="btn-icon btn-danger"
+          title="Delete"
+          onClick={() => vscode.postMessage({ type: 'deleteItem', id: item.id })}
+        >
+          ✕
+        </button>
+      </div>
     </div>
   );
 }

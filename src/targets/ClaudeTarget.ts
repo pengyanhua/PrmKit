@@ -7,22 +7,12 @@ export class ClaudeTarget implements DispatchTarget {
 
   async send(text: string): Promise<void> {
     await vscode.env.clipboard.writeText(text);
-    // Open sidebar and focus input
-    try {
-      await vscode.commands.executeCommand('claude-vscode.sidebar.open');
-      await new Promise(resolve => setTimeout(resolve, 500));
-      await vscode.commands.executeCommand('claude-vscode.focus');
-    } catch {
-      // Sidebar may already be open, just focus
-      try {
-        await vscode.commands.executeCommand('claude-vscode.focus');
-      } catch {
-        // ignore
-      }
-    }
-    vscode.window.showInformationMessage(
-      'Prompt copied — press Ctrl+V to paste into Claude Code'
-    );
+    // Open sidebar and focus input, then paste
+    await vscode.commands.executeCommand('claude-vscode.sidebar.open');
+    await new Promise(resolve => setTimeout(resolve, 500));
+    await vscode.commands.executeCommand('claude-vscode.focus');
+    await new Promise(resolve => setTimeout(resolve, 200));
+    await vscode.commands.executeCommand('editor.action.clipboardPasteAction');
   }
 
   isAvailable(): boolean {
