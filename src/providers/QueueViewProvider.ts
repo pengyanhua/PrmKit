@@ -92,6 +92,9 @@ export class QueueViewProvider implements vscode.WebviewViewProvider {
       case 'setTarget':
         this.dispatchService.setActiveTarget(msg.targetId);
         break;
+      case 'setRepeatCount':
+        this.queueService.setRepeatCount(msg.id, msg.count);
+        break;
     }
   }
 
@@ -100,10 +103,16 @@ export class QueueViewProvider implements vscode.WebviewViewProvider {
     if (!item) return;
 
     const resolved = this.templateService.resolve(item.content);
+    const repeatCount = item.repeatCount ?? 1;
     this.queueService.updateStatus(id, 'running');
 
     try {
-      await this.dispatchService.send(resolved);
+      for (let i = 0; i < repeatCount; i++) {
+        if (i > 0) {
+          await new Promise(resolve => setTimeout(resolve, 1500));
+        }
+        await this.dispatchService.send(resolved);
+      }
       this.queueService.markUsed(id);
       this.queueService.updateStatus(id, 'completed');
     } catch {

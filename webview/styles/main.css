@@ -134,6 +134,17 @@ body {
   color: var(--vscode-errorForeground);
 }
 
+.btn-repeat {
+  font-size: 11px;
+  min-width: 20px;
+  color: var(--vscode-descriptionForeground);
+}
+
+.btn-repeat.active {
+  color: var(--vscode-charts-blue, var(--vscode-button-background));
+  opacity: 1;
+}
+
 /* Toolbar */
 .toolbar {
   display: flex;

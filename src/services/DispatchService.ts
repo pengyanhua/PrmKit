@@ -5,6 +5,7 @@ import { TerminalTarget } from '../targets/TerminalTarget';
 import { CopilotTarget } from '../targets/CopilotTarget';
 import { CursorTarget } from '../targets/CursorTarget';
 import { ClaudeTarget } from '../targets/ClaudeTarget';
+import { WindsurfTarget } from '../targets/WindsurfTarget';
 
 export class DispatchService {
   private targets: Map<string, DispatchTarget> = new Map();
@@ -16,12 +17,14 @@ export class DispatchService {
     const copilot = new CopilotTarget();
     const cursor = new CursorTarget();
     const claude = new ClaudeTarget();
+    const windsurf = new WindsurfTarget();
 
     this.targets.set(clipboard.id, clipboard);
     this.targets.set(terminal.id, terminal);
     this.targets.set(copilot.id, copilot);
     this.targets.set(cursor.id, cursor);
     this.targets.set(claude.id, claude);
+    this.targets.set(windsurf.id, windsurf);
   }
 
   setActiveTarget(id: string) {

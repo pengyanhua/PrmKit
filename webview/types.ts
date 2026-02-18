@@ -13,6 +13,7 @@ export interface QueueItem {
   completedAt: string | null;
   skipReason: string | null;
   order: number;
+  repeatCount: number;
 }
 
 export interface TargetInfo {
@@ -38,6 +39,7 @@ export type WebviewToExtMessage =
   | { type: 'executeAll' }
   | { type: 'clearCompleted' }
   | { type: 'setTarget'; targetId: string }
+  | { type: 'setRepeatCount'; id: string; count: number }
   | { type: 'ready' };
 
 declare function acquireVsCodeApi(): {

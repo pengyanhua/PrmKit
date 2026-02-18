@@ -13,6 +13,13 @@ interface Props {
   onMoveDown: (id: string) => void;
 }
 
+const REPEAT_CYCLE = [1, 2, 3, 5];
+
+function nextRepeat(current: number): number {
+  const idx = REPEAT_CYCLE.indexOf(current);
+  return REPEAT_CYCLE[(idx + 1) % REPEAT_CYCLE.length];
+}
+
 export function QueueItemRow({ item, index, total, isDragging, onDragStart, onDrop, onMoveUp, onMoveDown }: Props) {
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(item.content);
@@ -42,6 +49,11 @@ export function QueueItemRow({ item, index, total, isDragging, onDragStart, onDr
     }
   }, [handleSave]);
 
+  const handleCycleRepeat = useCallback(() => {
+    const next = nextRepeat(item.repeatCount ?? 1);
+    vscode.postMessage({ type: 'setRepeatCount', id: item.id, count: next });
+  }, [item.id, item.repeatCount]);
+
   const statusIcon = {
     pending: '○',
     running: '◎',
@@ -50,6 +62,7 @@ export function QueueItemRow({ item, index, total, isDragging, onDragStart, onDr
   }[item.status];
 
   const statusClass = `status-${item.status}`;
+  const repeatCount = item.repeatCount ?? 1;
 
   const formattedTime = item.lastUsedAt
     ? formatTime(item.lastUsedAt)
@@ -117,13 +130,6 @@ export function QueueItemRow({ item, index, total, isDragging, onDragStart, onDr
             </button>
             <button
               className="btn-icon"
-              title="Execute"
-              onClick={() => vscode.postMessage({ type: 'executeItem', id: item.id })}
-            >
-              ▶
-            </button>
-            <button
-              className="btn-icon"
               title="Skip"
               onClick={() => vscode.postMessage({ type: 'updateStatus', id: item.id, status: 'skipped' })}
             >
@@ -131,6 +137,26 @@ export function QueueItemRow({ item, index, total, isDragging, onDragStart, onDr
             </button>
           </>
         )}
+
+        {item.status !== 'running' && (
+          <>
+            <button
+              className={`btn-icon btn-repeat ${repeatCount > 1 ? 'active' : ''}`}
+              title={`Repeat × ${repeatCount} (click to cycle: 1→2→3→5)`}
+              onClick={handleCycleRepeat}
+            >
+              {repeatCount > 1 ? `↺${repeatCount}` : '↺'}
+            </button>
+            <button
+              className="btn-icon"
+              title={item.status === 'pending' ? 'Execute' : 'Re-run'}
+              onClick={() => vscode.postMessage({ type: 'executeItem', id: item.id })}
+            >
+              ▶
+            </button>
+          </>
+        )}
+
         <button
           className="btn-icon btn-danger"
           title="Delete"

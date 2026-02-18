@@ -14,6 +14,7 @@ export interface QueueItem {
   completedAt: string | null;
   skipReason: string | null;
   order: number;
+  repeatCount: number;
 }
 
 export interface QueueData {
@@ -45,4 +46,5 @@ export type WebviewToExtMessage =
   | { type: 'executeAll' }
   | { type: 'clearCompleted' }
   | { type: 'setTarget'; targetId: string }
+  | { type: 'setRepeatCount'; id: string; count: number }
   | { type: 'ready' };

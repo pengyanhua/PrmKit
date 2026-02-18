@@ -68,6 +68,7 @@ export class QueueService {
       completedAt: null,
       skipReason: null,
       order: maxOrder + 1,
+      repeatCount: 1,
     };
 
     this.data.queue.push(item);
@@ -96,6 +97,14 @@ export class QueueService {
       if (status === 'completed') {
         item.completedAt = new Date().toISOString();
       }
+      this._save();
+    }
+  }
+
+  setRepeatCount(id: string, count: number) {
+    const item = this.data.queue.find(i => i.id === id);
+    if (item) {
+      item.repeatCount = Math.max(1, Math.min(10, count));
       this._save();
     }
   }
