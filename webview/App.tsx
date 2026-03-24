@@ -3,14 +3,17 @@ import type { QueueItem, ExtToWebviewMessage, TargetInfo, SortMode } from './typ
 import { vscode } from './types';
 import { AddInstruction } from './components/AddInstruction';
 import { QueueList } from './components/QueueList';
+import { ArchiveList } from './components/ArchiveList';
 import './styles/main.css';
 
 export function App() {
   const [items, setItems] = useState<QueueItem[]>([]);
+  const [archivedItems, setArchivedItems] = useState<QueueItem[]>([]);
   const [project, setProject] = useState('');
   const [targets, setTargets] = useState<TargetInfo[]>([]);
   const [activeTarget, setActiveTarget] = useState('clipboard');
   const [sortMode, setSortMode] = useState<SortMode>('order');
+  const [showArchive, setShowArchive] = useState(false);
 
   useEffect(() => {
     const handler = (event: MessageEvent<ExtToWebviewMessage>) => {
@@ -18,6 +21,7 @@ export function App() {
       switch (msg.type) {
         case 'updateQueue':
           setItems(msg.items);
+          setArchivedItems(msg.archivedItems || []);
           break;
         case 'updateProject':
           setProject(msg.project);
@@ -101,12 +105,55 @@ export function App() {
           </button>
         )}
         {hasCompleted && (
-          <button
-            className="btn btn-secondary"
-            onClick={() => vscode.postMessage({ type: 'clearCompleted' })}
-          >
-            Clear Completed
-          </button>
+          <>
+            <button
+              className="btn btn-secondary"
+              onClick={() => vscode.postMessage({ type: 'archiveCompleted' })}
+              title="Move completed items to archive"
+            >
+              📦 Archive Done
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => vscode.postMessage({ type: 'clearCompleted' })}
+            >
+              Clear Completed
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Archive Section */}
+      <div className="archive-section">
+        <button
+          className="archive-toggle"
+          onClick={() => setShowArchive(!showArchive)}
+        >
+          <span className={`archive-arrow ${showArchive ? 'open' : ''}`}>▶</span>
+          <span>Archive</span>
+          {archivedItems.length > 0 && (
+            <span className="archive-count">{archivedItems.length}</span>
+          )}
+        </button>
+
+        {showArchive && (
+          <div className="archive-body">
+            {archivedItems.length === 0 ? (
+              <div className="empty">No archived items.</div>
+            ) : (
+              <>
+                <ArchiveList items={archivedItems} />
+                <div className="archive-actions">
+                  <button
+                    className="btn btn-danger-sm"
+                    onClick={() => vscode.postMessage({ type: 'deleteArchived' })}
+                  >
+                    🗑 Delete All Archived
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         )}
       </div>
     </div>

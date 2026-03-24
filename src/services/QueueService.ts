@@ -45,7 +45,20 @@ export class QueueService {
   }
 
   getItems(): QueueItem[] {
-    return [...this.data.queue].sort((a, b) => a.order - b.order);
+    return [...this.data.queue]
+      .filter(i => !i.archived)
+      .sort((a, b) => a.order - b.order);
+  }
+
+  getArchivedItems(): QueueItem[] {
+    return [...this.data.queue]
+      .filter(i => i.archived)
+      .sort((a, b) => {
+        // Most recently archived first
+        const aTime = a.archivedAt || a.createdAt;
+        const bTime = b.archivedAt || b.createdAt;
+        return bTime.localeCompare(aTime);
+      });
   }
 
   getItem(id: string): QueueItem | undefined {
@@ -53,7 +66,12 @@ export class QueueService {
   }
 
   addItem(content: string, source: QueueItemSource = 'manual'): QueueItem {
-    const maxOrder = this.data.queue.reduce((max, i) => Math.max(max, i.order), -1);
+    // Shift all existing non-archived items' order up by 1 so the new item goes to the top
+    for (const existing of this.data.queue) {
+      if (!existing.archived) {
+        existing.order += 1;
+      }
+    }
     const hasVariables = /\{(file|filename|selection|language|workspace|line)\}/.test(content);
 
     const item: QueueItem = {
@@ -67,8 +85,10 @@ export class QueueService {
       useCount: 0,
       completedAt: null,
       skipReason: null,
-      order: maxOrder + 1,
+      order: 0,
       repeatCount: 1,
+      archived: false,
+      archivedAt: null,
     };
 
     this.data.queue.push(item);
@@ -133,16 +153,66 @@ export class QueueService {
     this._save();
   }
 
+  archiveItem(id: string) {
+    const item = this.data.queue.find(i => i.id === id);
+    if (item) {
+      item.archived = true;
+      item.archivedAt = new Date().toISOString();
+      this._save();
+    }
+  }
+
+  archiveCompleted() {
+    const now = new Date().toISOString();
+    for (const item of this.data.queue) {
+      if (item.status === 'completed' && !item.archived) {
+        item.archived = true;
+        item.archivedAt = now;
+      }
+    }
+    this._save();
+  }
+
+  restoreItem(id: string) {
+    const item = this.data.queue.find(i => i.id === id);
+    if (item) {
+      item.archived = false;
+      item.archivedAt = null;
+      item.status = 'pending';
+      // Put restored item at the top
+      for (const existing of this.data.queue) {
+        if (!existing.archived && existing.id !== id) {
+          existing.order += 1;
+        }
+      }
+      item.order = 0;
+      this._save();
+    }
+  }
+
+  deleteArchived() {
+    this.data.queue = this.data.queue.filter(i => !i.archived);
+    this._save();
+  }
+
   importItems(items: QueueItem[]) {
-    const maxOrder = this.data.queue.reduce((max, i) => Math.max(max, i.order), -1);
+    // Shift existing items to make room at the top
+    const count = items.length;
+    for (const existing of this.data.queue) {
+      if (!existing.archived) {
+        existing.order += count;
+      }
+    }
     items.forEach((item, index) => {
       const newItem: QueueItem = {
         ...item,
         id: randomUUID(),
         status: 'pending',
         source: 'import',
-        order: maxOrder + 1 + index,
+        order: index,
         completedAt: null,
+        archived: false,
+        archivedAt: null,
       };
       this.data.queue.push(newItem);
     });

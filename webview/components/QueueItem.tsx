@@ -158,6 +158,13 @@ export function QueueItemRow({ item, index, total, isDragging, onDragStart, onDr
         )}
 
         <button
+          className="btn-icon btn-archive"
+          title="Archive"
+          onClick={() => vscode.postMessage({ type: 'archiveItem', id: item.id })}
+        >
+          📦
+        </button>
+        <button
           className="btn-icon btn-danger"
           title="Delete"
           onClick={() => vscode.postMessage({ type: 'deleteItem', id: item.id })}

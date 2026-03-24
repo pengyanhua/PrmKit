@@ -14,6 +14,8 @@ export interface QueueItem {
   skipReason: string | null;
   order: number;
   repeatCount: number;
+  archived: boolean;
+  archivedAt: string | null;
 }
 
 export interface TargetInfo {
@@ -24,7 +26,7 @@ export interface TargetInfo {
 export type SortMode = 'order' | 'frequency';
 
 export type ExtToWebviewMessage =
-  | { type: 'updateQueue'; items: QueueItem[] }
+  | { type: 'updateQueue'; items: QueueItem[]; archivedItems: QueueItem[] }
   | { type: 'updateProject'; project: string }
   | { type: 'updateTargets'; targets: TargetInfo[]; activeId: string };
 
@@ -40,6 +42,10 @@ export type WebviewToExtMessage =
   | { type: 'clearCompleted' }
   | { type: 'setTarget'; targetId: string }
   | { type: 'setRepeatCount'; id: string; count: number }
+  | { type: 'archiveItem'; id: string }
+  | { type: 'archiveCompleted' }
+  | { type: 'restoreItem'; id: string }
+  | { type: 'deleteArchived' }
   | { type: 'ready' };
 
 declare function acquireVsCodeApi(): {

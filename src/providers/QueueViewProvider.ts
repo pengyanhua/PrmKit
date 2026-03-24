@@ -42,6 +42,7 @@ export class QueueViewProvider implements vscode.WebviewViewProvider {
       this._view.webview.postMessage({
         type: 'updateQueue',
         items: this.queueService.getItems(),
+        archivedItems: this.queueService.getArchivedItems(),
       });
       this._view.webview.postMessage({
         type: 'updateProject',
@@ -94,6 +95,18 @@ export class QueueViewProvider implements vscode.WebviewViewProvider {
         break;
       case 'setRepeatCount':
         this.queueService.setRepeatCount(msg.id, msg.count);
+        break;
+      case 'archiveItem':
+        this.queueService.archiveItem(msg.id);
+        break;
+      case 'archiveCompleted':
+        this.queueService.archiveCompleted();
+        break;
+      case 'restoreItem':
+        this.queueService.restoreItem(msg.id);
+        break;
+      case 'deleteArchived':
+        this.queueService.deleteArchived();
         break;
     }
   }
