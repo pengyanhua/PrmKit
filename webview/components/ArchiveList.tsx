@@ -13,6 +13,7 @@ export function ArchiveList({ items }: Props) {
         <div key={item.id} className="archive-item">
           <div className="archive-item-content">
             <span className="archive-item-text" title={item.content}>
+              {item.favorited && <span className="archive-fav-star">★ </span>}
               {item.content}
             </span>
           </div>

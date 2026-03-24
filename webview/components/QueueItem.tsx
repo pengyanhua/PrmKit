@@ -110,6 +110,13 @@ export function QueueItemRow({ item, index, total, isDragging, onDragStart, onDr
       </div>
 
       <div className="queue-item-actions">
+        <button
+          className={`btn-icon btn-fav ${item.favorited ? 'active' : ''}`}
+          title={item.favorited ? 'Remove from favorites' : 'Add to favorites'}
+          onClick={() => vscode.postMessage({ type: 'toggleFavorite', id: item.id })}
+        >
+          {item.favorited ? '★' : '☆'}
+        </button>
         {item.status === 'pending' && (
           <>
             <button

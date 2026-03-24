@@ -16,6 +16,7 @@ export interface QueueItem {
   repeatCount: number;
   archived: boolean;
   archivedAt: string | null;
+  favorited: boolean;
 }
 
 export interface TargetInfo {
@@ -23,7 +24,7 @@ export interface TargetInfo {
   label: string;
 }
 
-export type SortMode = 'order' | 'frequency';
+export type SortMode = 'order' | 'frequency' | 'favorites';
 
 export type ExtToWebviewMessage =
   | { type: 'updateQueue'; items: QueueItem[]; archivedItems: QueueItem[] }
@@ -46,6 +47,7 @@ export type WebviewToExtMessage =
   | { type: 'archiveCompleted' }
   | { type: 'restoreItem'; id: string }
   | { type: 'deleteArchived' }
+  | { type: 'toggleFavorite'; id: string }
   | { type: 'ready' };
 
 declare function acquireVsCodeApi(): {

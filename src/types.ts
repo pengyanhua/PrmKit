@@ -17,6 +17,7 @@ export interface QueueItem {
   repeatCount: number;
   archived: boolean;
   archivedAt: string | null;
+  favorited: boolean;
 }
 
 export interface QueueData {
@@ -53,4 +54,5 @@ export type WebviewToExtMessage =
   | { type: 'archiveCompleted' }
   | { type: 'restoreItem'; id: string }
   | { type: 'deleteArchived' }
+  | { type: 'toggleFavorite'; id: string }
   | { type: 'ready' };

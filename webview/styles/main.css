@@ -467,3 +467,23 @@ body {
 .btn-archive {
   font-size: 11px;
 }
+
+/* Favorite */
+.btn-fav {
+  font-size: 13px;
+  color: var(--vscode-descriptionForeground);
+}
+
+.btn-fav.active {
+  color: #f5c542;
+  opacity: 1;
+}
+
+.btn-fav:hover {
+  color: #f5c542;
+}
+
+.archive-fav-star {
+  color: #f5c542;
+  font-size: 11px;
+}

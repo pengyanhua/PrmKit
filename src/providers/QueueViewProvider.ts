@@ -108,6 +108,9 @@ export class QueueViewProvider implements vscode.WebviewViewProvider {
       case 'deleteArchived':
         this.queueService.deleteArchived();
         break;
+      case 'toggleFavorite':
+        this.queueService.toggleFavorite(msg.id);
+        break;
     }
   }
 

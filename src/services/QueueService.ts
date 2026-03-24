@@ -89,6 +89,7 @@ export class QueueService {
       repeatCount: 1,
       archived: false,
       archivedAt: null,
+      favorited: false,
     };
 
     this.data.queue.push(item);
@@ -195,6 +196,14 @@ export class QueueService {
     this._save();
   }
 
+  toggleFavorite(id: string) {
+    const item = this.data.queue.find(i => i.id === id);
+    if (item) {
+      item.favorited = !item.favorited;
+      this._save();
+    }
+  }
+
   importItems(items: QueueItem[]) {
     // Shift existing items to make room at the top
     const count = items.length;
@@ -213,6 +222,7 @@ export class QueueService {
         completedAt: null,
         archived: false,
         archivedAt: null,
+        favorited: item.favorited ?? false,
       };
       this.data.queue.push(newItem);
     });

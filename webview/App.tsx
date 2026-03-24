@@ -43,6 +43,13 @@ export function App() {
     if (sortMode === 'frequency') {
       return [...items].sort((a, b) => b.useCount - a.useCount);
     }
+    if (sortMode === 'favorites') {
+      return [...items].sort((a, b) => {
+        if (a.favorited && !b.favorited) return -1;
+        if (!a.favorited && b.favorited) return 1;
+        return a.order - b.order;
+      });
+    }
     return items;
   }, [items, sortMode]);
 
@@ -72,6 +79,12 @@ export function App() {
             onClick={() => setSortMode('frequency')}
           >
             Freq
+          </button>
+          <button
+            className={`btn-chip ${sortMode === 'favorites' ? 'active' : ''}`}
+            onClick={() => setSortMode('favorites')}
+          >
+            ★ Favs
           </button>
         </div>
         {targets.length > 0 && (
