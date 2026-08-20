@@ -35,11 +35,9 @@ export function activate(context: vscode.ExtensionContext) {
         prompt: 'Enter a prompt to add to the queue',
         placeHolder: 'Type your prompt here...',
       });
-      if (input) {
-        const lines = input.split('\n').map(l => l.trim()).filter(Boolean);
-        for (const line of lines) {
-          queueService.addItem(line, 'quick-capture');
-        }
+      const trimmed = input?.trim();
+      if (trimmed) {
+        queueService.addItem(trimmed, 'quick-capture');
         provider.refresh();
       }
     }),
@@ -50,16 +48,12 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('prmkit.sendToQueue', async () => {
       const editor = vscode.window.activeTextEditor;
       if (editor) {
-        const selection = editor.document.getText(editor.selection);
+        const selection = editor.document.getText(editor.selection).trim();
         if (selection) {
-          const lines = selection.split('\n').map(l => l.trim()).filter(Boolean);
-          for (const line of lines) {
-            queueService.addItem(line, 'context-menu');
-          }
+          // The whole selection becomes a single prompt, line breaks included.
+          queueService.addItem(selection, 'context-menu');
           provider.refresh();
-          vscode.window.showInformationMessage(
-            `Added ${lines.length} prompt(s) to PrmKit queue`,
-          );
+          vscode.window.showInformationMessage('Added 1 prompt to PrmKit queue');
         }
       }
     }),

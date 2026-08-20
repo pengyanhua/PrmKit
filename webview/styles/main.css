@@ -281,6 +281,19 @@ body {
   line-height: 20px;
   word-break: break-word;
   cursor: text;
+  /* Multi-paragraph prompts keep their line breaks, but stay collapsed
+     to a few lines so one long prompt cannot fill the whole panel. */
+  white-space: pre-wrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  overflow: hidden;
+}
+
+.queue-item-content.expanded {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
 }
 
 .status-completed .queue-item-content {
@@ -315,6 +328,19 @@ body {
 .queue-item-count {
   font-size: 11px;
   color: var(--vscode-descriptionForeground);
+}
+
+.queue-item-toggle {
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 11px;
+  color: var(--vscode-textLink-foreground);
+  cursor: pointer;
+}
+
+.queue-item-toggle:hover {
+  text-decoration: underline;
 }
 
 .queue-item-badge {
@@ -421,6 +447,11 @@ body {
   line-height: 20px;
   word-break: break-word;
   color: var(--vscode-descriptionForeground);
+  white-space: pre-wrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 .archive-item-meta {

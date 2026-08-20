@@ -22,8 +22,12 @@ function nextRepeat(current: number): number {
 
 export function QueueItemRow({ item, index, total, isDragging, onDragStart, onDrop, onMoveUp, onMoveDown }: Props) {
   const [editing, setEditing] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [editValue, setEditValue] = useState(item.content);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Long / multi-paragraph prompts are clamped in CSS and get a toggle.
+  const isLong = item.content.includes('\n') || item.content.length > 200;
 
   const handleEdit = useCallback(() => {
     setEditValue(item.content);
@@ -88,11 +92,11 @@ export function QueueItemRow({ item, index, total, isDragging, onDragStart, onDr
             onChange={e => setEditValue(e.target.value)}
             onKeyDown={handleKeyDown}
             onBlur={handleSave}
-            rows={2}
+            rows={editValue.includes('\n') ? 8 : 2}
           />
         ) : (
           <span
-            className="queue-item-content"
+            className={`queue-item-content ${expanded ? 'expanded' : ''}`}
             onDoubleClick={handleEdit}
             title="Double-click to edit"
           >
@@ -102,6 +106,14 @@ export function QueueItemRow({ item, index, total, isDragging, onDragStart, onDr
       </div>
 
       <div className="queue-item-meta">
+        {isLong && !editing && (
+          <button
+            className="queue-item-toggle"
+            onClick={() => setExpanded(v => !v)}
+          >
+            {expanded ? 'Show less' : 'Show more'}
+          </button>
+        )}
         <span className="queue-item-time">{formattedTime}</span>
         {item.useCount > 0 && (
           <span className="queue-item-count">×{item.useCount}</span>

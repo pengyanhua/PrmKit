@@ -9,13 +9,9 @@ export function AddInstruction() {
     const trimmed = value.trim();
     if (!trimmed) return;
 
-    const lines = trimmed.split('\n').map(l => l.trim()).filter(Boolean);
-
-    if (lines.length === 1) {
-      vscode.postMessage({ type: 'addItem', content: lines[0] });
-    } else {
-      vscode.postMessage({ type: 'addItems', contents: lines });
-    }
+    // Keep the whole text as ONE item — never split on line breaks,
+    // so multi-paragraph prompts stay intact.
+    vscode.postMessage({ type: 'addItem', content: trimmed });
 
     setValue('');
     textareaRef.current?.focus();
@@ -35,7 +31,7 @@ export function AddInstruction() {
         value={value}
         onChange={e => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Type a prompt... (Shift+Enter for multi-line)"
+        placeholder="Type or paste a prompt... (Shift+Enter for new line)"
         rows={2}
         className="input"
       />

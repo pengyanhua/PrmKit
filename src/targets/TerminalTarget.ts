@@ -11,7 +11,15 @@ export class TerminalTarget implements DispatchTarget {
       throw new Error('No active terminal');
     }
     terminal.show();
-    terminal.sendText(text, true);
+
+    if (text.includes('\n')) {
+      // Wrap in bracketed paste so the shell / CLI treats the whole block as a
+      // single pasted input instead of running each line as its own command.
+      terminal.sendText(`\x1b[200~${text}\x1b[201~`, false);
+      terminal.sendText('', true);
+    } else {
+      terminal.sendText(text, true);
+    }
   }
 
   isAvailable(): boolean {
