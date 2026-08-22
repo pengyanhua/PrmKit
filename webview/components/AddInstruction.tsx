@@ -32,7 +32,7 @@ export function AddInstruction() {
         onChange={e => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Type or paste a prompt... (Shift+Enter for new line)"
-        rows={2}
+        rows={5}
         className="input"
       />
       <button className="btn btn-add" onClick={handleSubmit} disabled={!value.trim()}>
